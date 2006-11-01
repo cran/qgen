@@ -1,0 +1,1 @@
+This build of the qgen-package does not support the analysis of quantitative genetic data collected on several traits in several environments. The reason therefore is an incompatibility of qgen with the newest release of the lme4-package, which is used internally.
