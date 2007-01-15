@@ -3,11 +3,11 @@
 \title{Transformation of causal genetic parameters to observational parameters}
 \description{
   For theoretical investigations we need a function that takes the
-  chosen causal genetic parameters and transforms them into obervarional
+  chosen causal genetic parameters and transforms them into observational
   parameters. Additionally the form of the object needs to be adjusted
   to fit the form of an object of class \code{\link{paraDATA}}. This function
-  handels the following causal variance components: additive; dominance,
-  maternal, microenvironmental; and the following sources of observable
+  handles the following causal variance components: additive; dominance,
+  maternal, micro-environmental; and the following sources of observable
   variance components: sire, dam, and individuals.
 }
 \usage{
@@ -75,7 +75,7 @@ the(partitioning = "all",
     fixedblock--environment--character combinations (sequence:
     character in environments in fixedblock, ex. fb1: en1ch1,
     en1ch2...en2ch1...enxchx fb2: en1ch1,...)}
-  \item{miss}{vector with the proportion of randomly missing values per envrionment--character combination; if scalar all are
+  \item{miss}{vector with the proportion of randomly missing values per environment--character combination; if scalar all are
     assumed to be equal}
   \item{en.names}{vector of character strings: names for the environments}
   \item{ch.names}{vector of character strings: names for the traits}
@@ -90,7 +90,7 @@ This function transforms the causal sources of variance (additive
 genetic effects, dominance genetic effects, common (maternal)
 environmental effects, and individual (special) environmental effects)
 into the three observable variance components from a nested full--sib,
-half--sib mating design (North-Caralina Design I). Assuptions: no sources of epistatic variance; see Lynch & Walsh 1997, p.572.
+half--sib mating design (North-Carolina Design I). Assumptions: no sources of epistatic variance; see Lynch & Walsh 1997, p.572.
 }
 \value{
   a \code{\link{paraDATA}} object: with the individual slots
@@ -102,7 +102,7 @@ half--sib mating design (North-Caralina Design I). Assuptions: no sources of epi
 }
 \references{
 Lynch, M. and Walsh, B. (1997) \emph{Genetics and analysis of
-  quantitative tratis.} Sinauer.
+  quantitative traits.} Sinauer.
 }
 \seealso{
 \code{\link{emp}}, \code{\link{paraDATA}}

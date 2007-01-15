@@ -14,7 +14,7 @@ emp(data.use=NULL,
     dam.use="dam",
     individual.use="individual",
     without="", partitioning="REML",
-    file=TRUE, path="~/Desktop/myproject.Qgen/")
+    file=TRUE, path="~/Desktop/myproject.qgen/")
 }
 \arguments{
 \item{data.use}{the name of a dataframe}

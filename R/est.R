@@ -6,7 +6,7 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
     versionOLD <- TRUE
   }
   versionOLD <- FALSE
-  print(paste("is this the old version?", as.character(versionOLD)))
+#  print(paste("is this the old version?", as.character(versionOLD)))
 ##################################################
 ###                                        reading
   chN <- paraDATA@supl@chN
@@ -20,6 +20,10 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
   dat <- paraDATA@DATA@dat
   dat$si_da <- as.factor(paste(dat$si,"_", dat$da, sep=""))
   dat$en_ch<- as.factor(paste(dat$en,"_", dat$ch, sep=""))
+#############################################################################
+###                                                                     NAMES
+  ## S.names is a list with the dimnames for variance-covariance matrices
+   S.names <- list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") )
 ##################################################
   ## deciding what should be calculated, depending on the origin (part and hist)
   part <- paraDATA@orig@part
@@ -160,7 +164,7 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
       }
     }#(___oldversion)
     ##output
-    reml.para <- new("para", rbS=tblockSigma, siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(), error=scale^2, fixe=fix.coef)
+    reml.para <- new("para", rbS=tblockSigma, siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(dimnames=S.names), error=as.numeric(scale^2), fixe=fix.coef)
 #################################
 ### LONGOUTPUT
     if(modelsummary){
@@ -331,8 +335,8 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
       } #(anova___)
     } #___end of environment-character loop
   }#(unbalanced___)
-#################################
-  ##output
+  ## #################################
+  ##                            output
   if(unbalanced){
     unbal.Est <- list(siDF.vec=siDF.vec, daDF.vec=daDF.vec, idDF.vec=idDF.vec,     siDFappREML.vec=siDFappREML.vec, daDFappREML.vec=daDFappREML.vec,     siDFappANOVA.vec=siDFappANOVA.vec, daDFappANOVA.vec=daDFappANOVA.vec,     siDFappANOVAuw.vec=siDFappANOVAuw.vec, daDFappANOVAuw.vec=daDFappANOVAuw.vec,      w1u.vec=w1u.vec, w2u.vec=w2u.vec, w3u.vec=w3u.vec) #degrees of freedom and weights
   }else{
@@ -340,25 +344,25 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
   }
   ##
     if(ANOVApartitioning & REMLpartitioning & chN*enN==1){
-      secondpartitioning.reml <- list(ANOVAuw=list(para=new("para", rbS=matrix(0), siS=matrix(siV.ANOVAuw), daS=matrix(daV.ANOVAuw), idS=matrix(reV.ANOVA), phS=matrix(), error=0, fixe = array(0, dim=c(enN, chN, fbN)))),
-                                        ANOVA=new("para", rbS=matrix(0), siS=matrix(siV.ANOVA), daS=matrix(daV.ANOVA), idS=matrix(reV.ANOVA), phS=matrix(), error=0, fixe = array(0, dim=c(enN, chN, fbN)))
+      secondpartitioning.reml <- list(ANOVAuw=list(para=new("para", rbS=matrix(0, dimnames=S.names), siS=matrix(siV.ANOVAuw, dimnames=S.names), daS=matrix(daV.ANOVAuw, dimnames=S.names), idS=matrix(reV.ANOVA, dimnames=S.names), phS=matrix(dimnames=S.names), error=0, fixe = array(0, dim=c(enN, chN, fbN)))),
+                                        ANOVA=new("para", rbS=matrix(0, dimnames=S.names), siS=matrix(siV.ANOVA, dimnames=S.names), daS=matrix(daV.ANOVA, dimnames=S.names), idS=matrix(reV.ANOVA, dimnames=S.names), phS=matrix(dimnames=S.names), error=0, fixe = array(0, dim=c(enN, chN, fbN)))
                                       )
     }else{
       secondpartitioning.reml <- list()
     }
-#################################
-### OUTPUT
+#############################################################################
+###                                                                    OUTPUT
   ## orig
   origEst <- new("orig", hist=c(paraDATA@orig@hist, "est"), warn=c(paraDATA@orig@warn, ""), time=c(paraDATA@orig@time, date()), part=paraDATA@orig@part)
   ## supl
   suplEst <- new("supl", paraDATA@supl)
   ## para & spec
   if(part=="ANOVA" & chN*enN==1){
-    paraEst <- new("para", rbS=matirx(0), siS=matrix(siV.ANOVA), daS=matrix(daV.ANOVA), idS=matrix(reV.ANOVA), phS=matrix(), error=0, fixe = rep(0, times=chN*enN))
+    paraEst <- new("para", rbS=matirx(0, dimnames=S.names), siS=matrix(siV.ANOVA, dimnames=S.names), daS=matrix(daV.ANOVA, dimnames=S.names), idS=matrix(reV.ANOVA, dimnames=S.names), phS=matrix(dimnames=S.names), error=0, fixe = rep(0, times=chN*enN))
     specEst <- new("spec", additional.partitioning=list(), unbalanced=unbal.Est, modelsummary=list(), secondcontrast=list())
   }
   if(part=="ANOVAuw" & chN*enN==1){
-    paraEst <- new("para", rbS=matirx(0), siS=matrix(sV.ANOVAuw), daS=matrix(daV.ANOVAuw), idS=matrix(reV.ANOVAuw), phS=matrix(), error=0, fixe = rep(0, times=chN*enN))
+    paraEst <- new("para", rbS=matirx(0, dimnames=S.names), siS=matrix(sV.ANOVAuw, dimnames=S.names), daS=matrix(daV.ANOVAuw, dimnames=S.names), idS=matrix(reV.ANOVAuw, dimnames=S.names), phS=matrix(dimnames=S.names), error=0, fixe = rep(0, times=chN*enN))
     specEst <- new("spec", additional.partitioning=list(), unbalanced=unbal.Est, modelsummary=list(), secondcontrast=list())
   }
   if(part=="REML"|part=="all"){
@@ -378,3 +382,6 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
   ##
   est
 }
+#############################################################################
+###                                                                     KNOWN
+### 1) t

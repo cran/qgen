@@ -15,7 +15,7 @@ sim(paraDATA, file=FALSE)
 \value{a \code{\link{paraDATA}}--object, with the slots:
   \item{orig}{full}
   \item{supl}{full}
-  \item{para}{full, the realized sampilng variance-covariance
+  \item{para}{full, the realized sampling variance-covariance
     components; \code{phS=NULL}}.
   \item{DATA}{full; the simulated data set}
   \item{spec}{NULL}

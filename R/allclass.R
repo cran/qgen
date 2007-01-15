@@ -13,13 +13,23 @@ setClass("orig",
 setClass("supl",
          representation(chN="integer", enN="integer", fbN="integer", rbN="integer", siN="integer", daN="integer", idN="integer", miss="array"),
          validity = function(object) {
-	     Dim <- object@chN
-	     if (Dim < 0)
-		 return("chN must be larger or equal to 1")
-	     ## 'else'	ok :
-	     TRUE
+           ## miss has three dimensions (fixedblock, environment, character)
+           if (length(dim(object@miss))!=3){
+             return("the slot \"miss\" of \"supl\" should have three dimentions: one for fixedblock, environment, and character")
+           }
+           ## the dimensions of miss must be chN, enN, fbN
+##            if (dim(object@miss)[1]!=object@enN){ #& dim(object@miss)[2]== object@supl@enN & dim(object@miss)[3]==object@supl@fbN)){
+##              return("the slot \"miss\" of \"supl\" should have the dimentions c(enN, chN, fbN)")
+##            }
+           ## there must be one character
+           Dim <- object@chN
+           if (Dim < 0){
+             return("chN must be larger or equal to 1")
+           }
+           ## 'else'	ok :
+           TRUE
 	 })
-# setValidity("supl", valiDsupl)
+       # setValidity("supl", valiDsupl)
 ##
 setClass("DATA", representation(dat="data.frame"))
 ##

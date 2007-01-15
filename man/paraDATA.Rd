@@ -1,4 +1,4 @@
-\name{Qgen-classes}
+\name{qgen-classes}
 \alias{paraDATA-class}
 \alias{orig-class}
 \alias{supl-class}
@@ -15,8 +15,8 @@
 \alias{spec}
 \alias{multi}
 \alias{stat}
-\title{Qgen: Class definitions}
-\description{Describing classes associated with Qgen}
+\title{qgen: Class definitions}
+\description{Describing classes associated with qgen}
 \usage{
 ###
 "paraDATA"# is a virtual class, extended by:
@@ -57,7 +57,7 @@
 	\item{daN}{the number of dams within sires}
 	\item{idN}{the number of individuals}
 	\item{miss}{proportion of randomly missing values per
-	  envrionment--character--fixedblock combination in a array; \code{dim=c(fb,en,ch)}; if scalar all are
+	  environment--character--fixedblock combination in a array; \code{dim=c(fb,en,ch)}; if scalar all are
 	  assumed to be equal}
     }}
     \item{para}{all parameters needed to describe the distribution of
@@ -86,7 +86,7 @@
     }}}}
     \item{spec}{the place for specific information on the model used to
       estimate the parameter etc. \describe{
-      \item{additional.partitioning}{A list with Qgen \code{para-class}
+      \item{additional.partitioning}{A list with qgen \code{para-class}
 	objects containing parameters variance partitioning by ANOVA and/or ANOVAuw (with unweighted sums of
 	squares)}
       \item{unbalanced}{A list; information on the unbalancedness of the
