@@ -35,7 +35,7 @@ the(partitioning = "all",
                 fixe = array(0, dim=c(enN, chN, fbN)),
                 miss = array(0, dim=c(enN, chN, fbN)),
                 file=TRUE,
-                path="~/Desktop/myproject.qgen/")
+                path="~/qgen/")
 }
 \arguments{
   \item{partitioning}{character string: The method of variance
@@ -113,6 +113,6 @@ Lynch, M. and Walsh, B. (1997) \emph{Genetics and analysis of
 \examples{
 ## create a paraDATA-object
 ## (with a full para section and an empty DATA section)
-the()
+the(file=FALSE)
 }
 \keyword{file}

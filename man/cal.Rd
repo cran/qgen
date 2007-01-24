@@ -11,7 +11,7 @@
 }
 \usage{
 cal(filename, repetitions=2, spliting=1,
-    path="~/Desktop/myproject.qgen/")
+    file=TRUE, path="~/qgen/")
 }
 \arguments{
   \item{filename}{the name of a file containing an object of class
@@ -19,6 +19,7 @@ cal(filename, repetitions=2, spliting=1,
   \item{repetitions}{number of repetitions}
   \item{spliting}{not yet implemented; for spliting tasks among
     different computers}
+  \item{file}{logical flag: Should the object be written to a file}
   \item{path}{the path for the files: \code{calfile.r}, and \code{multi...rda}}
 }
 \details{

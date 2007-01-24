@@ -1,5 +1,6 @@
 \name{qgen-package}
 \alias{qgen-package}
+\alias{qgen}
 \docType{package}
 \title{
    Quantitative Genetics in R

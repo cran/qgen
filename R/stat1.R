@@ -1,5 +1,4 @@
-stat1 <- structure(function(paraDATA, alpha=0.05, frommethod="REML", Satterthwaite=TRUE, tex.table=FALSE, file=FALSE, path="~/Desktop/myproject.qgen") {
-  dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
+stat1 <- structure(function(paraDATA, alpha=0.05, frommethod="REML", Satterthwaite=TRUE, tex.table=FALSE, file=FALSE, path="~/qgen/") {
   ## frommethod (REML(default), ANOVA, ANOVAuw):
   ##      - only for experimental tests!
   ##      - whether the ANOVA estimators or
@@ -235,6 +234,7 @@ stat1 <- structure(function(paraDATA, alpha=0.05, frommethod="REML", Satterthwai
 #   stat1 <- list(orig=orig, supl=supl, para=para, data=data, spec=spec)
   ##
   if (file){
+    dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
     save(stat1, file=paste(path, "stat1.rda", sep=""))
   }
   stat1

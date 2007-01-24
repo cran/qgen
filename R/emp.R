@@ -1,4 +1,4 @@
-emp <-function(data.use=NULL, fixedblock.use="fixedblock", character.use, environment.use="environment", randomblock.use="randomblock", sire.use="sire", dam.use="dam", individual.use="individual", without="", partitioning="REML", file=TRUE, path="~/Desktop/myproject.qgen/"){
+emp <-function(data.use=NULL, fixedblock.use="fixedblock", character.use, environment.use="environment", randomblock.use="randomblock", sire.use="sire", dam.use="dam", individual.use="individual", without="", partitioning="REML", file=TRUE, path="~/qgen/"){
 ### the arguments:         data.use=NULL; environment.use="environment";  sire.use="sire"; dam.use="dam"; individual.use="individual"; without=""; partitioning="REML"; file=TRUE; path="~/Desktop/myproject.Qgen/"
 ###
 ### default dataset: SINAPIS

@@ -22,7 +22,7 @@ the <- function(partitioning = "all",
                 fixe = array(0, dim=c(enN, chN, fbN)),
                 miss = array(0, dim=c(enN, chN, fbN)),
                 file=TRUE,
-                path="~/Desktop/myproject.qgen/")
+                path="~/qgen/")
 ### the arguments:
 #                 partitioning = "all"
 #                 chN = 1, # character

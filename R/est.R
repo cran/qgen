@@ -1,14 +1,19 @@
-est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
-##################################################
-###                    1 or 2 environment VERSIONS
+est <- function(paraDATA, file=TRUE, path="~/qgen/"){
+#############################################################################
+###                    1 or 2 environment                            VERSIONS
+#############################################################################
+  ## for testing only
+  puzzle <- FALSE
+  
   ## under the assumption that with a newer Version of R also the packages were updated!
   if(R.Version()$minor>2){
     versionOLD <- TRUE
   }
   versionOLD <- FALSE
-#  print(paste("is this the old version?", as.character(versionOLD)))
-##################################################
-###                                        reading
+  ##  print(paste("is this the old version?", as.character(versionOLD)))
+#############################################################################
+###                                                                   READING
+#############################################################################
   chN <- paraDATA@supl@chN
   enN <- paraDATA@supl@enN
   fbN <- paraDATA@supl@fbN
@@ -22,9 +27,13 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
   dat$en_ch<- as.factor(paste(dat$en,"_", dat$ch, sep=""))
 #############################################################################
 ###                                                                     NAMES
+#############################################################################
   ## S.names is a list with the dimnames for variance-covariance matrices
-   S.names <- list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") )
-##################################################
+  S.names <- list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""), paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""))
+  #print(S.names)
+#############################################################################
+###                                                                   CONTROL
+#############################################################################
   ## deciding what should be calculated, depending on the origin (part and hist)
   part <- paraDATA@orig@part
   if(part=="all"){
@@ -68,61 +77,124 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
     secondcontrast <- FALSE
     modelsummary <- FALSE
   }
-##################################################
-###                                           REML
+#############################################################################
+###                                                                      REML
+#############################################################################
 ### always if(unbalanced) also if(ANOVApartitioning)
   if(REMLpartitioning){#(REML+++)
     ##
     if(!versionOLD){#(+++newversion) # lme4version0.995-2
-      if(chN*enN*fbN ==1){#++1a
+      if(chN*enN*fbN ==1){#+++1a
+        ## ###############################
+        ## one fixed level; NEW
+        ## ###############################
         model <- lmer(y ~ 1 + (1|si) + (1|si_da), dat)
         sBLUP <- ranef(model)$si # SIRE BLUPs
         names(sBLUP) <- names(sBLUP)
         sBLUP <- data.matrix(sBLUP)
         fix.coef <- fixe
-      }else{#--1a
-        stop("This version of qgen does not support calculations with more than one environment, character or fixed block!")
-        dat$fbchen = factor(paste(dat$fb,dat$ch,dat$en, sep="_")) # defining a new factor
-        model <- lmer(y ~ fbchen + (en_ch-1|si) + (en_ch-1|si_da) + (en_ch-1|id), dat) # THE HEART !!
-        fix.coef <- array(fixef(model)[1] + contrasts(dat$fbchen)%*% fixef(model)[-1], dim=c(length(levels(dat$en)), length(levels(dat$ch)), length(levels(dat$fb))), dimnames=list(levels(dat$en), levels(dat$ch), levels(dat$fb)))
-      }#__1a
-      ## getting all parameters from the random part of the lme4object ("model")
-      scale <- attributes(VarCorr(model))$sc
-      ## sire
-      sireSigma <- as.matrix(VarCorr(model)$si)
-      n <- length(sireSigma) # used later to form matrices
-      sireSigma <- matrix(sireSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
-      ## dam
-      damSigma <- as.matrix(VarCorr(model)$si_da)
-      damSigma <- matrix(damSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
-      ## individual
-      if ((chN*enN)>1){
-        iSD <- VarCorr(model)$id@x
-        indSigma <- matrix(iSD,ncol=n,nrow=n,byrow=FALSE) * matrix(iSD,ncol=n,nrow=n,byrow=TRUE) * VarCorr(model)@reSumry$id@.Data
-        indSigma <- matrix(indSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
-      }else{
-        indSigma <- matrix(0,nrow=n,ncol=n)
-        dimnames(indSigma) <- list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") )
-        eS <- scale^2
-        iSD <- 0
-        eC <- NULL
-        ePC <- NULL
-      }
-      ## different blocking factors are not yet supported
-      if(3==4){ #(rbN>1){
-        tSD <- VarCorr(model)@reSumry$rb@stdDev * scale
-        tblockSigma <- matrix(tSD,ncol=n,nrow=n,byrow=FALSE) * matrix(tSD,ncol=n,nrow=n,byrow=TRUE) * VarCorr(model)@reSumry$rb@.Data
-        tblockSigma <- matrix(tblockSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
-      }else{
-        tblockSigma <- matrix(0, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n,nrow=n)
-        tC <- NULL
-        tPC <- NULL
-      }
+        ## getting all parameters from the random part of the lme4object ("model")
+        scale <- attributes(VarCorr(model))$sc
+        ## sire
+        sireSigma <- as.matrix(VarCorr(model)$si)
+        n <- length(sireSigma) # used later to form matrices
+        sireSigma <- matrix(sireSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
+        ## dam
+        damSigma <- as.matrix(VarCorr(model)$si_da)
+        damSigma <- matrix(damSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
+        ## individual
+        if ((chN*enN)>1){
+          iSD <- VarCorr(model)$id@x
+          indSigma <- matrix(iSD,ncol=n,nrow=n,byrow=FALSE) * matrix(iSD,ncol=n,nrow=n,byrow=TRUE) * VarCorr(model)@reSumry$id@.Data
+          indSigma <- matrix(indSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
+        }else{
+          indSigma <- matrix(0,nrow=n,ncol=n)
+          dimnames(indSigma) <- list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") )
+          eS <- scale^2
+          iSD <- 0
+          eC <- NULL
+          ePC <- NULL
+        }
+        ## different blocking factors are not yet supported
+        if(3==4){ #(rbN>1){
+          tSD <- VarCorr(model)@reSumry$rb@stdDev * scale
+          tblockSigma <- matrix(tSD,ncol=n,nrow=n,byrow=FALSE) * matrix(tSD,ncol=n,nrow=n,byrow=TRUE) * VarCorr(model)@reSumry$rb@.Data
+          tblockSigma <- matrix(tblockSigma, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n, nrow=n)
+        }else{
+          tblockSigma <- matrix(0, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n,nrow=n)
+          tC <- NULL
+          tPC <- NULL
+        }
+        reml.para <- new("para", rbS=tblockSigma, siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), error=as.numeric(scale^2), fixe=fix.coef)
+      }else{#"""1a
+        if (chN>1){#(several_characters+++)
+          ## ###############################
+          ## multiple en AND multiple ch; NEW
+          ## ###############################
+          if (puzzle){#(puzzle+++)
+          indSigma <- matrix(0, nrow=enN*chN, ncol=enN*chN)           #
+          damSigma <- matrix(0, nrow=enN*chN, ncol=enN*chN)           #
+          sireSigma <- matrix(0, nrow=enN*chN, ncol=enN*chN)          #
+          for (i in 1:length(levels(dat$en))){#(loop_environments+++)
+            subdata <- dat[dat$en==levels(dat$en)[i],]
+            subdata$en <- subdata$en[,drop=TRUE]              # to drop unused levels of the factor
+            subdata$ch <- subdata$ch[,drop=TRUE]              # to drop unused levels of the factor
+            model <- lmer(y~ch+(ch-1|si)+(ch-1|si_da)+(ch-1|id), subdata)
+            ##
+            envNum=1                                             # because each environment is taken seperately (as variable to facilitate later changes)
+            ##
+            scale <- attributes(VarCorr(model))$sc
+            ## sire
+            sireSig <- as.matrix(VarCorr(model)$si)
+            sireSig <- matrix(sireSig, dimnames=list(paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep=""),paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep="") ), ncol=chN, nrow=chN)
+            ## dam
+            damSig <- as.matrix(VarCorr(model)$si_da)
+            damSig <- matrix(damSig, dimnames=list(paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep=""),paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep="") ), ncol=chN, nrow=chN)
+            ## ind
+            indSig <- as.matrix(VarCorr(model)$id)
+            indSig <- matrix(indSig, dimnames=list(paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep=""),paste(rep(levels(subdata$en),each=chN),"_",rep(levels(subdata$ch),times=envNum),sep="") ), ncol=chN, nrow=chN)
+            ## puzzle
+            sieve <- matrix(0,nrow=enN, ncol=enN)
+            sieve[rbind(c(i,i))] <- 1
+            indSigma <- indSigma + kronecker(sieve, indSig, FUN = "*", make.dimnames = FALSE)
+            damSigma <- damSigma + kronecker(sieve, damSig, FUN = "*", make.dimnames = FALSE)
+            sireSigma <- sireSigma + kronecker(sieve, sireSig, FUN = "*", make.dimnames = FALSE)
+          }#(loop_environments___)
+          reml.para <- new("para", rbS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), error=as.numeric(scale^2), fixe=array())
+        }else{#(puzzle***)
+          dat$fbchen = factor(paste(dat$fb,dat$ch,dat$en, sep="_")) # defining a new factor
+          model <- lmer(y ~ en_ch+ (en_ch-1|si) + (en_ch-1|si_da) + (en_ch-1|id), dat)
+          fix.coef <- array(fixef(model)[1] + contrasts(dat$fbchen)%*% fixef(model)[-1], dim=c(length(levels(dat$en)), length(levels(dat$ch)), length(levels(dat$fb))), dimnames=list(levels(dat$en), levels(dat$ch), levels(dat$fb)))
+          ## getting all parameters from the random part of the lme4object ("model")
+          scale <- attributes(VarCorr(model))$sc
+          ## sire
+          sireSigma <- as.matrix(VarCorr(model)$si)
+          dimnames(sireSigma) <- S.names
+          ## dam
+          damSigma <- as.matrix(VarCorr(model)$si_da)
+          dimnames(damSigma) <- S.names
+          ## ind
+          indSigma <- as.matrix(VarCorr(model)$id)
+          dimnames(indSigma) <- S.names
+          ##
+          reml.para <- new("para", rbS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), error=as.numeric(scale^2), fixe=array())
+          }#(puzzle___)
+        }else{#(several_characters---)
+          stop("This version of qgen does not support calculations with more than one environment but only one character")  
+        }#(several_characters___)
+        ##
+        ##dat$fbchen = factor(paste(dat$fb,dat$ch,dat$en, sep="_")) # defining a new factor
+        ##model <- lmer(y ~ fbchen + (en_ch-1|si) + (en_ch-1|si_da) + (en_ch-1|id), dat) # THE HEART !!
+        ##fix.coef <- array(fixef(model)[1] + contrasts(dat$fbchen)%*% fixef(model)[-1], dim=c(length(levels(dat$en)), length(levels(dat$ch)), length(levels(dat$fb))), dimnames=list(levels(dat$en), levels(dat$ch), levels(dat$fb)))
+        ##
+      }#(___1a)
     }#(___newversion)
-### ---------------------------------
     if(versionOLD){# (+++oldversion)
       ## lme4version0.95-6
       if(chN*enN*fbN ==1){#(1env+++)
+        ## #################################
+        ## one fixed level; OLD 
+        ## #################################
         model <- lmer(y ~ 1 + (1|si) + (1|si_da), dat)
         summary(model)
         sBLUP <- ranef(model)$si # SIRE BLUPs
@@ -130,6 +202,9 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
         sBLUP <- data.matrix(sBLUP)
         fix.coef <- fixe
       }else{#(1env---)
+        ## #################################
+        ## multiple fixed level; OLD 
+        ## #################################
         dat$fbchen = factor(paste(dat$fb,dat$ch,dat$en, sep="_")) # defining a new factor
         model <- lmer(y ~ fbchen + (en_ch-1|si) + (en_ch-1|si_da) + (en_ch-1|id), dat) # THE HEART !!
         summary(model)
@@ -162,9 +237,10 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
       }else{
         tblockSigma <- matrix(0, dimnames=list(paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep=""),paste(rep(levels(dat$en),each=chN),"_",rep(levels(dat$ch),times=enN),sep="") ), ncol=n,nrow=n); tC <- NULL; tPC <- NULL
       }
+      reml.para <- new("para", rbS=tblockSigma, siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(nrow=enN*chN, ncol=enN*chN, dimnames=S.names), error=as.numeric(scale^2), fixe=fix.coef)
     }#(___oldversion)
     ##output
-    reml.para <- new("para", rbS=tblockSigma, siS=sireSigma, daS=damSigma, idS=indSigma, phS=matrix(dimnames=S.names), error=as.numeric(scale^2), fixe=fix.coef)
+    
 #################################
 ### LONGOUTPUT
     if(modelsummary){
@@ -384,4 +460,4 @@ est <- function(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/"){
 }
 #############################################################################
 ###                                                                     KNOWN
-### 1) t
+### 1) fixe: extraction at several places needed

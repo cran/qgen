@@ -6,11 +6,13 @@
   the parameters given by a \code{\link{paraDATA}}-object.
   }
 \usage{
-sim(paraDATA, file=FALSE)
+sim(paraDATA, file=FALSE, path="~/qgen/")
 }
 \arguments{
   \item{paraDATA}{an object of class \code{\link{paraDATA}}}
-\item{file}{Logical flag: Should the object be written to "~/Desktop/sim.rda"?}
+  \item{file}{Logical flag: Should the \code{\link{paraDATA}} object be
+    written to path/"sim.rda"?}
+  \item{path}{indicating the path where the file \code{sim.rda} should be written}
 }
 \value{a \code{\link{paraDATA}}--object, with the slots:
   \item{orig}{full}
@@ -24,9 +26,9 @@ sim(paraDATA, file=FALSE)
   \emph{Name:} simulation
 }
 \examples{
-   my.parameters <- the()            # defines a paraDATA object
-   my.paraDATA <- sim(my.parameters) # simulates the corresponding data set
-   data.set <- my.paraDATA@DATA@dat  # extracts the simulated data
-                                     # from the paraDATA--object
+   my.parameters <- the(file=FALSE)         # defines a paraDATA object
+   my.paraDATA <- sim(my.parameters)        # simulates the corresponding data set
+   data.set <- my.paraDATA@DATA@dat         # extracts the simulated data
+                                            # from the paraDATA--object
 }
 \keyword{file}

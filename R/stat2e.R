@@ -1,4 +1,4 @@
-stat2e <- structure(function(paraDATA, alpha=0.05, v=list( c(-1,1),c(0,1),c(1,0),c(1,1),c(1,-1) ), Satterthwaite=TRUE, file=FALSE, path="~/Desktop/myproject.qgen"){
+stat2e <- structure(function(paraDATA, alpha=0.05, v=list( c(-1,1),c(0,1),c(1,0),c(1,1),c(1,-1) ), Satterthwaite=TRUE, file=FALSE, path="~/qgen/"){
 ### default attributes          alpha=0.05; v=list( c(-1,1),c(0,1),c(1,0),c(1,1),c(1,-1) ); Satterthwaite=TRUE; file=FALSE
   ## CONDITION
   ## makes only sens for exactly two environments

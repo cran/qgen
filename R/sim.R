@@ -1,9 +1,4 @@
-#paraDATA <- the(enN=2, chN=3, fbN=1, siN=3, daN=3, idN=2)# miss=array(c(0.1,0.9,0.3,0.7), dim=c(5,4,1)))
-
-
-
-
-sim <- function(paraDATA, file=FALSE){
+sim <- function(paraDATA, file=FALSE, path="~/qgen/"){
   ## to d:o
   ## remove design
   ## all that goes into class "supl" (miss -> realized variance-covariance matrix, fixe)
@@ -33,10 +28,10 @@ sim <- function(paraDATA, file=FALSE){
 ###                                                                     INTRO
 ###
   ## names
-  S.names <- dimnames(sS.pop)[[1]]     # the names of rows and columns in variance covariance matrix
+  S.names <- list(dimnames(sS.pop)[[1]], dimnames(sS.pop)[[1]])     # the names of rows and columns in variance covariance matrix
   ##
   zeroVector <- rep(0, times=chN*enN)                     # zero vector for means of the varcov matrix       
-  zeroMatrix <- matrix(0, ncol=chN*enN, nrow=chN*enN, dimnames=list(S.names,S.names))   # Matrix with all zeros of dimension of the fixed effects
+  zeroMatrix <- matrix(0, ncol=chN*enN, nrow=chN*enN, dimnames=S.names)   # Matrix with all zeros of dimension of the fixed effects
 #
 #############################################################################
 ###                                                             DESIGN MATRIX
@@ -146,7 +141,7 @@ sim <- function(paraDATA, file=FALSE){
 ### defines the structure of the output
   origSim <- new("orig", hist=c(paraDATA@orig@hist, "sim"), warn=c(paraDATA@orig@warn, ""), time=c(paraDATA@orig@time, date()), part=paraDATA@orig@part)
   suplSim <- new("supl", paraDATA@supl)
-  paraSim <- new("para", rbS=rbS.rea, siS=siS.rea, daS=daS.rea, idS=idS.rea, phS=matrix(), error=error, fixe=fix)                   #fix needs to be programed!!!
+  paraSim <- new("para", rbS=rbS.rea, siS=siS.rea, daS=daS.rea, idS=idS.rea, phS=matrix(nrow=chN*enN, ncol=chN*enN, dimnames=S.names), error=error, fixe=fix)                   #fix needs to be programed!!!
   DATASim <- new("DATA", dat=data.frame(ch=data$ch, en=data$en, fb=data$fb, rb=data$rb, si=data$si, da=data$da, id=data$id, y=data$y))
   specSim <- new("spec")
   ##

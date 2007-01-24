@@ -5,7 +5,7 @@
   estimates variance components for random effects and coefficients
   of the fixed effects for a given \code{\link{paraDATA}}--object.
 }
-\usage{est(paraDATA, file=TRUE, path="~/Desktop/myproject.qgen/")
+\usage{est(paraDATA, file=TRUE, path="~/qgen/")
 }
 \arguments{
 \item{paraDATA}{list with a definded structure; see \code{\link{paraDATA}}}
@@ -90,7 +90,7 @@
 \code{\link{paraDATA}}
 }
 \examples{
-parameters <- est(sim(the()))
+parameters <- est(sim(the(file=FALSE)), file=FALSE)
    # takes the default causal parameters of the()
    # simulates a data set
    # estimates the parameters

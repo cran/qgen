@@ -1,4 +1,4 @@
-dis <- function(path="~/Desktop/myproject.qgen/", alpha=0.05){
+dis <- function(path="~/qgen/", alpha=0.05){
 ### THE T LEVEL
   if(file.exists(paste(path,"statT.rda",sep=""))){
     input.name <- load(file=paste(path,"statT.rda",sep=""))

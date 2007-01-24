@@ -10,7 +10,7 @@ stat2e(paraDATA,
        v=list( c(-1,1),c(0,1),c(1,0),c(1,1),c(1,-1) ),
         Satterthwaite=TRUE,
        file=FALSE,
-       path="~/Desktop/myproject.qgen")
+       path="~/qgen/")
 }
 \arguments{
 \item{paraDATA}{object of class \code{\link{paraDATA}} created by the function \code{\link{est}} (or \code{\link{emp}}, see below)}
@@ -18,7 +18,7 @@ stat2e(paraDATA,
 \item{v}{list with weights for the two environments; the indices}
 \item{Satterthwaite}{Logical flag: Should the approximated degree of freedoms for sire and dam be used (only possible if they are available)?}
 \item{file}{Logical flag: Should the object be written to \cr
-  \code{"~/Desktop/myproject.qgen/stat2e.rda"?}}
+  a file called "\code{stat2e.rda}"?}
 \item{path}{the path for the output files}
 }
 \details{

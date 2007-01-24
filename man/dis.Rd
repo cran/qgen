@@ -7,7 +7,7 @@
   Calculates different bootstrap confidence intervals.
 }
 \usage{
-dis(path="~/Desktop/myproject.qgen/", alpha=0.05)
+dis(path="~/qgen/", alpha=0.05)
 }
 \arguments{
   \item{path}{path searched for \code{stat}X\code{.rda}-files.}

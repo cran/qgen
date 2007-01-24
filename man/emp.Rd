@@ -14,7 +14,7 @@ emp(data.use=NULL,
     dam.use="dam",
     individual.use="individual",
     without="", partitioning="REML",
-    file=TRUE, path="~/Desktop/myproject.qgen/")
+    file=TRUE, path="~/qgen/")
 }
 \arguments{
 \item{data.use}{the name of a dataframe}
@@ -52,6 +52,6 @@ partitioning method (used by the function \code{\link{est}}); see
   \emph{name:} empirical investigations
 }
 \examples{
-emp() #creates a paraDATA object with the data from "sinapis"
+emp(file=FALSE) #creates a paraDATA object with the data from "sinapis"
 }
 \keyword{file}

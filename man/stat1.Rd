@@ -11,7 +11,7 @@ stat1(paraDATA,
       Satterthwaite=TRUE,
       tex.table=FALSE,
       file=FALSE,
-      path="~/Desktop/myproject.qgen")
+      path="~/qgen/")
 }
 \arguments{
 \item{paraDATA}{object of class \code{\link{paraDATA}} created by the function \code{\link{est}} (or \code{\link{emp}}, see below)}
@@ -27,7 +27,7 @@ stat1(paraDATA,
     }}
 \item{Satterthwaite}{Logical flag: Should the approximated degree of freedoms for sire and dam be used (only possible if they are available)?}
 \item{file}{Logical flag: Should the object be written to \cr
-  \code{"~/Desktop/myproject.qgen/stat1.rda"?}}
+  a file called \code{"stat1.rda"?}}
 \item{tex.table}{Logical flag: should a LaTeX file be created with a
   table of all estimates}
 \item{path}{the path for the output files}
@@ -61,9 +61,9 @@ to choose among them.}
 }
 \examples{
 ## calculates narrow-sense heritability and its confidence intervals
-myparameters <- est(sim(the()))   # takes the default causal parameters of the()
-                                  # simulates a data set
-                                  # estimates the variance components
+myparameters <- est(sim(the(file=FALSE)), file=FALSE)  # takes the default causal parameters of the()
+                                                       # simulates a data set
+                                                       # estimates the variance components
 stat1(myparameters)               # calculates heritability and
                                   # confidence invals from estimated parameters
 }

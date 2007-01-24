@@ -1,13 +1,15 @@
-cal <- function(filename, repetitions=2, spliting=1, path="~/Desktop/myproject.qgen/") {
-  dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
-### which file to create
-  outputCAL <- paste(path, "CALfile.r", sep="")
-### which group
-    group <- "group1"
+cal <- function(filename, repetitions=2, spliting=1, file=TRUE, path="~/qgen/") {
+  if (file){
+    dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
+    ## which file to create
+    outputCAL <- paste(path, "CALfile.r", sep="")
+  }
+  ## which group
+  group <- "group1"
   if (substring(filename, first=7, last=7)=="S" & substring(filename, first=17, last=17)!="R"){group <- "group2"}  ## here all "multiTSyyyy.rda"
   if (substring(filename, first=17, last=17)=="R"){group <- "group3";print(filename)} ## here all multiTxxxxoyyyyRzzzz.rda"
   if (substring(filename, first=27, last=27)=="Q"){stop("? Do you really want to perform a tripple bootstrap ?\n-> this is not supportet; yet?!")}
-### GROUP2
+  ## GROUP2
   if(group=="group2"){
     level <- "R"
     total.file.number <- 1

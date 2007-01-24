@@ -1,4 +1,4 @@
-sta <- function(filename="", path="~/Desktop/myproject.qgen/", statistic.name,  alpha=0.05,  transformation="none"){
+sta <- function(filename="", statistic.name,  alpha=0.05,  transformation="none", file=TRUE, path="~/qgen/"){
   ## depending on the length of the filename...
   file.name.length <- length(strsplit(filename, split="")[[1]]); print(paste("file name has length: ",file.name.length))
   if(file.name.length==10){
@@ -61,6 +61,9 @@ sta <- function(filename="", path="~/Desktop/myproject.qgen/", statistic.name,  
       }
     }
     dimnames(stat.matrix) <- list(dim.stat.matrix, statname)
-  dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
-  save(stat.matrix,file=paste(path,"stat", input@level,".rda",sep=""))
+  ##
+  if (file){
+    dir.create(path=path, showWarnings = FALSE, recursive = TRUE)
+    save(stat.matrix,file=paste(path,"stat", input@level,".rda",sep=""))
+  }
 }
